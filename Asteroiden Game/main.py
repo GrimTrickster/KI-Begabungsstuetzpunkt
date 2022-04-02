@@ -18,55 +18,70 @@ playerY = 5
 
 
 #Sets Player at start-position
-def setPlayer():
-    pixels[playerX][playerY] = 2
+def setPlayer(playerXCoordinate, playerYCoordinate):
+    pixels[playerXCoordinate][playerYCoordinate] = 2
 
 
-#Generate random Game Data
-def gameGenerator():
-    global pixel_y
+def generateRow():
+    pixelRow = []
+    for y in range(0, 10):
+        pixel_mode = numpy.random.choice([0, 1], p=[0.8, 0.2])
+        pixelRow.append(pixel_mode)
+    return pixelRow
+
+
+def generateGame():
     global pixels
-    pixels = []
-
-    # multiple horizontal lines
     for x in range(0, 10):
-        # 1 horizontal line
-        for y in range(0, 10):
-            # Asteroid or not (with probability)
-            pixel_mode = numpy.random.choice([0, 1], p=[0.7, 0.3])
+        pixels.append(generateRow())
+    setPlayer(playerX, playerY)
 
-            #set temporary horizontal line
-            pixel_y.append(pixel_mode)
 
-        #Add all lines to big data
-        pixels.append(pixel_y)
-        pixel_y = []
-    setPlayer()
-
+# def nextStep(playerStep):
+#     #To change variables outside functions: global
+#     global playerY
+#
+#     lastPixels = pixels[9]
+#     for i in range(0, 9):
+#         pixels[9 - i] = pixels[8 - i]
+#     pixels[0] = lastPixels
+#
+#     #Welche Richtung?
+#     if playerStep == 1:
+#         playerY += 1
+#     elif playerStep == -1:
+#         playerY -= 1
+#     setPlayer()
+#     checkCollision()
 
 def nextStep(playerStep):
-    #To change variables outside functions: global
     global playerY
+    global playerX
 
-    lastPixels = pixels[9]
     for i in range(0, 9):
-        pixels[9 - i] = pixels[8 - i]
-    pixels[0] = lastPixels
+        pixels[9 - i] = pixels[8 -i]
+    pixels[0] = generateRow()
 
-    #Welche Richtung?
-    if playerStep == 1:
-        playerY += 1
-    elif playerStep == -1:
-        playerY -= 1
-    setPlayer()
-    checkCollision()
+    if playerStep == "up":
+        #Jetzige Position zurücksetzen (Spieler entfernen
+        pixels[playerX][playerY] = 0
 
-
-def checkCollision():
-    return
+        #Bei keiner Kollision weitersetzen
+        checkCollision(playerX - 1, playerY)
 
 
-gameGenerator()
+def checkCollision(playerXCoordinates, playerYCoordinates):
+    if pixels[playerXCoordinates][playerYCoordinates] == 1:
+        print("You loose")
+
+        #Only for test TODO: Remove test purpose
+        setPlayer(playerXCoordinates, playerYCoordinates)
+    else:
+        print("Ok")
+        setPlayer(playerXCoordinates, playerYCoordinates)
+
+
+generateGame()
 
 fig = plt.figure()
 ax = plt.subplot(1, 1, 1)
@@ -76,8 +91,8 @@ plt.pause(1)
 
 
 for sth in range(0, 10):
-    nextStep(-1)
+    nextStep(input("Bitte Richtung eingeben: "))
 
     im.set_data(pixels)
     im.draw(fig.canvas.renderer)
-    plt.pause(0.5)
+    plt.pause(2)
