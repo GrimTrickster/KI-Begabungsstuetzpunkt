@@ -1,7 +1,6 @@
 import numpy
-import matplotlib.pyplot
+import matplotlib.pyplot as plt
 
-import time
 
 #Position data
 pixels = []
@@ -26,6 +25,8 @@ def setPlayer():
 #Generate random Game Data
 def gameGenerator():
     global pixel_y
+    global pixels
+    pixels = []
 
     # multiple horizontal lines
     for x in range(0, 10):
@@ -58,25 +59,25 @@ def nextStep(playerStep):
     elif playerStep == -1:
         playerY -= 1
     setPlayer()
-    checkCollission()
+    checkCollision()
 
 
-def checkCollission():
+def checkCollision():
     return
 
 
 gameGenerator()
 
+fig = plt.figure()
+ax = plt.subplot(1, 1, 1)
+im = ax.imshow(pixels, interpolation=None, cmap='Greys')
 
-print(pixels)
-matplotlib.pyplot.imshow(pixels, cmap='Greys', interpolation='None')
-matplotlib.pyplot.show()
-
-
-nextStep(-1)
-
-print(pixels)
+plt.pause(1)
 
 
-matplotlib.pyplot.imshow(pixels, cmap='Greys', interpolation='None')
-matplotlib.pyplot.show()
+for sth in range(0, 10):
+    nextStep(-1)
+
+    im.set_data(pixels)
+    im.draw(fig.canvas.renderer)
+    plt.pause(0.5)
