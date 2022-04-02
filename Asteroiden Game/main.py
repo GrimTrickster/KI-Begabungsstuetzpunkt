@@ -1,9 +1,5 @@
 import numpy
 import matplotlib.pyplot as plt
-from matplotlib.widgets import TextBox
-
-
-
 
 #Position data
 pixels = []
@@ -40,29 +36,12 @@ def generateGame():
     setPlayer(playerX, playerY)
 
 
-# def nextStep(playerStep):
-#     #To change variables outside functions: global
-#     global playerY
-#
-#     lastPixels = pixels[9]
-#     for i in range(0, 9):
-#         pixels[9 - i] = pixels[8 - i]
-#     pixels[0] = lastPixels
-#
-#     #Welche Richtung?
-#     if playerStep == 1:
-#         playerY += 1
-#     elif playerStep == -1:
-#         playerY -= 1
-#     setPlayer()
-#     checkCollision()
-
 def nextStep(playerStep):
     global playerY
     global playerX
 
     for i in range(0, 9):
-        pixels[9 - i] = pixels[8 -i]
+        pixels[9 - i] = pixels[8 - i]
     pixels[0] = generateRow()
 
     if playerStep == "up":
@@ -84,12 +63,6 @@ def checkCollision(playerXCoordinates, playerYCoordinates):
         setPlayer(playerXCoordinates, playerYCoordinates)
 
 
-
-
-#TextBox
-def submit(text):
-    print('Submitted: ' + text)
-
 generateGame()
 
 # fig = plt.figure()
@@ -97,10 +70,6 @@ generateGame()
 fig, ax = plt.subplots()
 im = ax.imshow(pixels, interpolation=None, cmap='Greys')
 
-
-abox = fig.add_axes([0.1, 0.05, 0.8, 0.075])
-textBox = TextBox(abox, 'Submit: ', 'Write something')
-textBox.on_submit(submit)
 
 plt.pause(1)
 
