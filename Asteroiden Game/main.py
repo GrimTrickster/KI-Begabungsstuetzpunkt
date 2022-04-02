@@ -1,5 +1,8 @@
 import numpy
 import matplotlib.pyplot as plt
+from matplotlib.widgets import TextBox
+
+
 
 
 #Position data
@@ -81,17 +84,28 @@ def checkCollision(playerXCoordinates, playerYCoordinates):
         setPlayer(playerXCoordinates, playerYCoordinates)
 
 
+
+
+#TextBox
+def submit(text):
+    print('Submitted: ' + text)
+
 generateGame()
 
-fig = plt.figure()
-ax = plt.subplot(1, 1, 1)
+# fig = plt.figure()
+# ax = plt.subplot(1, 1, 1)
+fig, ax = plt.subplots()
 im = ax.imshow(pixels, interpolation=None, cmap='Greys')
+
+
+abox = fig.add_axes([0.1, 0.05, 0.8, 0.075])
+textBox = TextBox(abox, 'Submit: ', 'Write something')
+textBox.on_submit(submit)
 
 plt.pause(1)
 
-
 for sth in range(0, 10):
-    nextStep(input("Bitte Richtung eingeben: "))
+    nextStep('up')
 
     im.set_data(pixels)
     im.draw(fig.canvas.renderer)
