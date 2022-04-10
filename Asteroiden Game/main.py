@@ -27,7 +27,6 @@ def setPlayer(playerXCoordinate, playerYCoordinate):
     playerY = playerYCoordinate
 
 
-
 def generateRow():
     pixelRow = []
     for y in range(0, 10):
@@ -53,15 +52,20 @@ def nextStep(playerStep):
     pixels[0] = generateRow()
 
     if playerStep == "up":
-        if not checkAsteroidCollision(playerX - 1, playerY):
-            # Jetzige Position zurücksetzen (Spieler entfernen
-            pixels[playerX + 1][playerY] = 0
+        if not checkAsteroidCollision(playerX - 1, playerY) and not checkBorderCollision(playerX - 1, playerY):
+            # Jetzige Position zurücksetzen (Spieler entfernen)
+            # Beim ersten Mal Fall-Bewegung nicht mitberechnen.
+            try:
+                pixels[playerX + 1][playerY] = 0
+            except IndexError:
+                pixels[playerX][playerY] = 0
+
             # Bei keiner Kollision weitersetzen
             setPlayer(playerX - 1, playerY)
         else:
             # TODO: Remove Test Code
             pixels[playerX + 1][playerY] = 0
-            setPlayer(playerX - 1, playerY)
+            setPlayer(playerX, playerY)
 
     if playerStep == "left":
         if not checkAsteroidCollision(playerX, playerY - 1) and not checkBorderCollision(playerX, playerY - 1):
@@ -105,7 +109,7 @@ def checkBorderCollision(playerXCoordinates, playerYCoordinates):
     # Collision = True | NoCollision = False
 
     #  Zukünftiger Wert außerhalb Array
-    if playerYCoordinates == -1 or playerYCoordinates == 10:
+    if playerYCoordinates == -1 or playerYCoordinates == 10 or playerXCoordinates == -1 or playerYCoordinates == 10:
         return True
     else:
         return False
@@ -121,9 +125,8 @@ im = ax.imshow(pixels, interpolation=None, cmap='Greys')
 
 plt.pause(1)
 
-for sth in range(0, 10):
-    nextStep('right')
-    print(playerY)
+for sth in range(0, 20):
+    nextStep('n')
 
     im.set_data(pixels)
     im.draw(fig.canvas.renderer)
