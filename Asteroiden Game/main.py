@@ -12,7 +12,7 @@ pixelMode = 0
 
 
 # Player (Start) Coordinates
-playerX = 5
+playerX = 9
 playerY = 5
 
 
@@ -54,7 +54,7 @@ def nextStep(playerStep):
     if playerStep == "up":
         if not checkAsteroidCollision(playerX - 1, playerY) and not checkBorderCollision(playerX - 1, playerY):
             # Jetzige Position zurücksetzen (Spieler entfernen)
-            # Beim ersten Mal Fall-Bewegung nicht mitberechnen.
+            # Fall-Bewegung vorbeugen
             try:
                 pixels[playerX + 1][playerY] = 0
             except IndexError:
@@ -64,7 +64,10 @@ def nextStep(playerStep):
             setPlayer(playerX - 1, playerY)
         else:
             # TODO: Remove Test Code
-            pixels[playerX + 1][playerY] = 0
+            try:
+                pixels[playerX + 1][playerY] = 0
+            except IndexError:
+                pixels[playerX][playerY] = 0
             setPlayer(playerX, playerY)
 
     elif playerStep == "down":
@@ -78,24 +81,38 @@ def nextStep(playerStep):
 
     elif playerStep == "left":
         if not checkAsteroidCollision(playerX, playerY - 1) and not checkBorderCollision(playerX, playerY - 1):
-            # Jetzige Position zurücksetzen (Spieler entfernen
-            pixels[playerX][playerY] = 0
+            # Jetzige Position zurücksetzen (Spieler entfernen)
+            # Fall-Bewegung vorbeugen
+            try:
+                pixels[playerX + 1][playerY] = 0
+            except IndexError:
+                pixels[playerX][playerY] = 0
+
             # Bei keiner Kollision weitersetzen
             setPlayer(playerX, playerY - 1)
         else:
             # TODO: Remove Test Code
-            pixels[playerX][playerY] = 0
+            try:
+                pixels[playerX + 1][playerY] = 0
+            except IndexError:
+                pixels[playerX][playerY] = 0
             setPlayer(playerX, playerY)
 
     elif playerStep == "right":
         if not checkAsteroidCollision(playerX, playerY + 1) and not checkBorderCollision(playerX, playerY + 1):
-            # Jetzige Position zurücksetzen (Spieler entfernen
-            pixels[playerX][playerY] = 0
+            # Jetzige Position zurücksetzen (Spieler entfernen)
+            try:
+                pixels[playerX + 1][playerY] = 0
+            except IndexError:
+                pixels[playerX][playerY] = 0
             # Bei keiner Kollision weitersetzen
             setPlayer(playerX, playerY + 1)
         else:
             # TODO: Remove Test Code
-            pixels[playerX][playerY] = 0
+            try:
+                pixels[playerX + 1][playerY] = 0
+            except IndexError:
+                pixels[playerX][playerY] = 0
             setPlayer(playerX, playerY)
 
     else:
@@ -135,12 +152,13 @@ generateGame()
 fig, ax = plt.subplots()
 im = ax.imshow(pixels, interpolation=None, cmap='Greys')
 
+pattern = ['up', 'up', 'left', 'left', 'up', 'right', 'right', 'right', 'right', 'right', 'down', 'down']
 
 plt.pause(1)
 
-for sth in range(0, 20):
-    nextStep('down')
+for iterations in range(0, len(pattern)):
+    nextStep(pattern[iterations])
 
     im.set_data(pixels)
     im.draw(fig.canvas.renderer)
-    plt.pause(1)
+    plt.pause(2)
