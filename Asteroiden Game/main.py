@@ -1,22 +1,22 @@
 import numpy
 import matplotlib.pyplot as plt
 
-#Position data
+# Position data
 pixels = []
 
-#Temporary horizontal data
+# Temporary horizontal data
 pixel_y = []
 
-#Temporary variable 0 = Nichts 1 = Asteroid
+# Temporary variable 0 = Nichts 1 = Asteroid
 pixelMode = 0
 
 
-#Player (Start) Coordinates
+# Player (Start) Coordinates
 playerX = 9
 playerY = 5
 
 
-#Sets Player at start-position
+# Sets Player at start-position
 def setPlayer(playerXCoordinate, playerYCoordinate):
     pixels[playerXCoordinate][playerYCoordinate] = 2
 
@@ -45,22 +45,25 @@ def nextStep(playerStep):
     pixels[0] = generateRow()
 
     if playerStep == "up":
-        #Jetzige Position zurücksetzen (Spieler entfernen
-        pixels[playerX][playerY] = 0
-
-        #Bei keiner Kollision weitersetzen
-        checkCollision(playerX - 1, playerY)
+        if not checkCollision(playerX - 1, playerY):
+            # Jetzige Position zurücksetzen (Spieler entfernen
+            pixels[playerX][playerY] = 0
+            # Bei keiner Kollision weitersetzen
+            setPlayer(playerX - 1, playerY)
+        else:
+            # TODO: Remove Test Code
+            pixels[playerX][playerY] = 0
+            setPlayer(playerX - 1, playerY)
 
 
 def checkCollision(playerXCoordinates, playerYCoordinates):
+    # Collision = True | NoCollision = False
     if pixels[playerXCoordinates][playerYCoordinates] == 1:
         print("You loose")
-
-        #Only for test TODO: Remove test purpose
-        setPlayer(playerXCoordinates, playerYCoordinates)
+        return True
     else:
         print("Ok")
-        setPlayer(playerXCoordinates, playerYCoordinates)
+        return False
 
 
 generateGame()
