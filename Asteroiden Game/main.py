@@ -67,7 +67,7 @@ def nextStep(playerStep):
             pixels[playerX + 1][playerY] = 0
             setPlayer(playerX, playerY)
 
-    if playerStep == "left":
+    elif playerStep == "left":
         if not checkAsteroidCollision(playerX, playerY - 1) and not checkBorderCollision(playerX, playerY - 1):
             # Jetzige Position zurücksetzen (Spieler entfernen
             pixels[playerX][playerY] = 0
@@ -78,7 +78,7 @@ def nextStep(playerStep):
             pixels[playerX][playerY] = 0
             setPlayer(playerX, playerY)
 
-    if playerStep == "right":
+    elif playerStep == "right":
         if not checkAsteroidCollision(playerX, playerY + 1) and not checkBorderCollision(playerX, playerY + 1):
             # Jetzige Position zurücksetzen (Spieler entfernen
             pixels[playerX][playerY] = 0
@@ -88,6 +88,11 @@ def nextStep(playerStep):
             # TODO: Remove Test Code
             pixels[playerX][playerY] = 0
             setPlayer(playerX, playerY)
+
+    else:
+        pixels[playerX][playerY] = 0
+        setPlayer(playerX, playerY)
+
 
 
 def checkAsteroidCollision(playerXCoordinates, playerYCoordinates):
