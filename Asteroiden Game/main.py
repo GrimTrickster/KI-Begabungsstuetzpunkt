@@ -18,7 +18,14 @@ playerY = 5
 
 # Sets Player at start-position
 def setPlayer(playerXCoordinate, playerYCoordinate):
+    global pixels
+    global playerX
+    global playerY
+
     pixels[playerXCoordinate][playerYCoordinate] = 2
+    playerX = playerXCoordinate
+    playerY = playerYCoordinate
+
 
 
 def generateRow():
@@ -39,30 +46,68 @@ def generateGame():
 def nextStep(playerStep):
     global playerY
     global playerX
+    global pixels
 
     for i in range(0, 9):
         pixels[9 - i] = pixels[8 - i]
     pixels[0] = generateRow()
 
     if playerStep == "up":
-        if not checkCollision(playerX - 1, playerY):
+        if not checkAsteroidCollision(playerX - 1, playerY):
             # Jetzige Position zurücksetzen (Spieler entfernen
-            pixels[playerX][playerY] = 0
+            pixels[playerX + 1][playerY] = 0
             # Bei keiner Kollision weitersetzen
             setPlayer(playerX - 1, playerY)
         else:
             # TODO: Remove Test Code
-            pixels[playerX][playerY] = 0
+            pixels[playerX + 1][playerY] = 0
             setPlayer(playerX - 1, playerY)
 
+    if playerStep == "left":
+        if not checkAsteroidCollision(playerX, playerY - 1) and not checkBorderCollision(playerX, playerY - 1):
+            # Jetzige Position zurücksetzen (Spieler entfernen
+            pixels[playerX][playerY] = 0
+            # Bei keiner Kollision weitersetzen
+            setPlayer(playerX, playerY - 1)
+        else:
+            # TODO: Remove Test Code
+            pixels[playerX][playerY] = 0
+            setPlayer(playerX, playerY)
 
-def checkCollision(playerXCoordinates, playerYCoordinates):
+    if playerStep == "right":
+        if not checkAsteroidCollision(playerX, playerY + 1) and not checkBorderCollision(playerX, playerY + 1):
+            # Jetzige Position zurücksetzen (Spieler entfernen
+            pixels[playerX][playerY] = 0
+            # Bei keiner Kollision weitersetzen
+            setPlayer(playerX, playerY + 1)
+        else:
+            # TODO: Remove Test Code
+            pixels[playerX][playerY] = 0
+            setPlayer(playerX, playerY)
+
+
+def checkAsteroidCollision(playerXCoordinates, playerYCoordinates):
     # Collision = True | NoCollision = False
-    if pixels[playerXCoordinates][playerYCoordinates] == 1:
-        print("You loose")
+
+    # Wegen prüfen möglicher zukünftiger Werte, die nicht existieren könnten:
+    try:
+        if pixels[playerXCoordinates][playerYCoordinates] == 1:
+            print("You loose")
+            return True
+        else:
+            print("Ok")
+            return False
+    except IndexError:
+        pass
+
+
+def checkBorderCollision(playerXCoordinates, playerYCoordinates):
+    # Collision = True | NoCollision = False
+
+    #  Zukünftiger Wert außerhalb Array
+    if playerYCoordinates == -1 or playerYCoordinates == 10:
         return True
     else:
-        print("Ok")
         return False
 
 
@@ -77,8 +122,9 @@ im = ax.imshow(pixels, interpolation=None, cmap='Greys')
 plt.pause(1)
 
 for sth in range(0, 10):
-    nextStep('up')
+    nextStep('right')
+    print(playerY)
 
     im.set_data(pixels)
     im.draw(fig.canvas.renderer)
-    plt.pause(2)
+    plt.pause(1)
